@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Container from "../../ui/container";
 import { ApiService } from "../../services/api-data";
 import { Movie, MovieApiResponse } from "../../interface/movie-api";
-import MoviesCard from "../movies-card/moviescard";
+import MoviesCard from "./movies-card/moviescard";
 import { Box, Button } from "@mui/material";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 const Movies = () => {
@@ -53,6 +53,7 @@ const Movies = () => {
             width: "350px",
             marginX: "auto",
             alignItems: "center",
+            marginTop: "20px",
           }}
         >
           <Button

@@ -11,16 +11,12 @@ const options = {
   },
 };
 
-export const ApiService = async <T>(
-  url: string,
-  page: number = 1
-): Promise<T> => {
+export const AllDataService = async <T>(url: string): Promise<T> => {
   try {
     const res: AxiosResponse<T> = await axios.get<T>(
-      `${baseURL}${url}&page=${page}`,
+      `${baseURL}/${url}`,
       options
     );
-
     return res.data;
   } catch (error) {
     console.error("Error occurred:", error);

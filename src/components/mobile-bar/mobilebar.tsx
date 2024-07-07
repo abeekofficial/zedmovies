@@ -17,15 +17,15 @@ const MobileBar = () => {
     { name: "Account", path: "/", icon: user },
   ];
   return (
-    <div className="sticky bottom-0 z-50 py-5 bg-primary px-3">
-      <section className="items-center justify-between h-15 sticky top-0 md:hidden flex">
+    <div className="sticky bottom-0 z-50 py-5 bg-primary px-3 flex justify-end flex-col">
+      <div className="items-center justify-between h-15 sticky top-0 md:hidden flex">
         {menus.map((menu, i) => (
           <Link key={i} to={menu.path} className="flex flex-col items-center">
             <div className="text-white">{React.createElement(menu.icon)}</div>
             <p className="text-white font-medium">{menu.name}</p>
           </Link>
         ))}
-      </section>
+      </div>
     </div>
   );
 };
