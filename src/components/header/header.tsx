@@ -3,8 +3,9 @@ import Button from "../../ui/Button";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "../../ui/container";
+import Navbar from "./navbar";
 
-const Navbar = () => {
+const Header = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const [top, setTop] = useState<boolean>(true);
@@ -28,12 +29,12 @@ const Navbar = () => {
   return (
     <header
       className={`${
-        !top && "shadow-mixedblue shadow-sm"
-      } sticky top-0 z-50 py-5 bg-primary`}
+        !top && "shadow-mixedblue shadow-md"
+      } sticky top-0 z-50 bg-primary`}
     >
       <Container>
         <nav
-          className={`flex items-center gap-10 justify-between lg:gap-20 mb-6 px-3 xl:px-0`}
+          className={`flex items-center gap-10 py-7 justify-between lg:gap-20 mb-10 px-3 xl:px-0`}
         >
           <div
             className={`flex items-center gap-4 flex-shrink-0 ${
@@ -46,6 +47,7 @@ const Navbar = () => {
               </h1>
             </a>
           </div>
+          <Navbar />
           <form
             onSubmit={handleChange}
             className={`flex-shrink-0 gap-4 justify-center flex-grow ${
@@ -57,7 +59,7 @@ const Navbar = () => {
                 <ArrowLeft />
               </Button>
             )}
-            <div className="max-w-[600px] flex flex-grow items-center">
+            <div className="max-w-[350px] flex flex-grow items-center">
               <input
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
@@ -92,4 +94,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Header;

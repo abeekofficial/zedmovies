@@ -1,21 +1,31 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RootLayout from "./layout/RootLayout";
-import { Account, Home, Settings, Watchlist } from "./components";
-import TvSeries from "./components/tv-series/tv-series";
-import Movies from "./components/movies/Movies";
+import {
+  Account,
+  Home,
+  Watchlist,
+  Movies,
+  TvSeries,
+  MediaDetails,
+} from "./components";
 
 function App() {
+  const route = [
+    { path: "/", element: <Home /> },
+    { path: "/watchlist", element: <Watchlist /> },
+    { path: "/movies", element: <Movies /> },
+    { path: "/account", element: <Account /> },
+    { path: "/tv-series", element: <TvSeries /> },
+    { path: "/:type/:id", element: <MediaDetails /> },
+  ];
   return (
     <BrowserRouter>
       <RootLayout>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/watchlist" element={<Watchlist />} />
-          <Route path="/tv-series" element={<TvSeries />} />
-          <Route path="/movies/" element={<Movies />} />
-          <Route path="/account" element={<Account />} />
+          {route.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
         </Routes>
       </RootLayout>
     </BrowserRouter>
