@@ -33,7 +33,7 @@ export interface credits {
 }
 
 // cast
-interface cast {
+export interface cast {
   adult: boolean;
   cast_id: number;
   character: string;
@@ -49,7 +49,7 @@ interface cast {
 }
 
 // crew
-interface crew {
+export interface crew {
   adult: boolean;
   credit_id: string;
   department: string;
@@ -62,3 +62,22 @@ interface crew {
   popularity: number;
   profile_path: string | null;
 }
+
+// Video type
+export interface Trailer {
+  id: number;
+  results: TrailorVideos[];
+}
+
+export type TrailorVideos = {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  published_at: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  id: string;
+};

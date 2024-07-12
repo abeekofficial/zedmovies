@@ -12,7 +12,7 @@ type MediaProps = {
 
 const MediaCard: React.FC<MediaProps> = ({ item, type }) => {
   return (
-    <Link to={`/${type}/${item.id}`}>
+    <Link to={`/${type}/${item.id}`} className="md:mx-0 mx-4">
       <Box
         key={item.id}
         sx={{

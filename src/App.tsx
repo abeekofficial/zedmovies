@@ -1,21 +1,14 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RootLayout from "./layout/RootLayout";
-import {
-  Account,
-  Home,
-  Watchlist,
-  Movies,
-  TvSeries,
-  MediaDetails,
-} from "./components";
+import { Home, Watchlist, Movies, TvSeries } from "./components";
+import MediaDetails from "./pages/media-details/media-details";
 
 function App() {
   const route = [
     { path: "/", element: <Home /> },
     { path: "/watchlist", element: <Watchlist /> },
     { path: "/movies", element: <Movies /> },
-    { path: "/account", element: <Account /> },
     { path: "/tv-series", element: <TvSeries /> },
     { path: "/:type/:id", element: <MediaDetails /> },
   ];

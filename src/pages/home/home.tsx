@@ -46,7 +46,9 @@ const Movies = () => {
 
   return (
     <Container>
-      <Banners />
+      <div className="md:px-0 px-4">
+        <Banners />
+      </div>
       <main className="mt-5">
         <div className="flex items-center gap-10 mb-5">
           <h1 className="text-2xl font-bold text-white">Trending</h1>

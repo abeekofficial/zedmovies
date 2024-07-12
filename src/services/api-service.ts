@@ -57,6 +57,7 @@ export const fetchingGenres = async (
   }
 };
 
+//Fetch credits
 export const fetchingCredits = async (
   type: "movie" | "tv" | "all",
   id: number
@@ -68,6 +69,22 @@ export const fetchingCredits = async (
     return response?.data;
   } catch (error) {
     console.error("Error fetching credits:", error);
+    throw error;
+  }
+};
+
+//Fetch videos
+export const fetchingVideos = async (
+  type: "movie" | "tv" | "all",
+  id: number
+) => {
+  try {
+    const response = await axios.get(
+      `${baseURL}/${type}/${id}/videos?api_key=${API_KEY}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching videos:", error);
     throw error;
   }
 };

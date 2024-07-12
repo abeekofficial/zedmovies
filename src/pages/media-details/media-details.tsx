@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   fetchingCredits,
   fetchingDetails,
   fetchingGenres,
+  fetchingVideos,
   imagePath,
 } from "../../services/api-service";
 import { HashLoader } from "react-spinners";
@@ -15,7 +16,9 @@ import { getVoteColor } from "../../functions";
 import { CalendarCheck, PlayIcon, PlusIcon } from "lucide-react";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import type { MediaDetails } from "../../interface/media-details";
-import { credits, genres } from "../../interface/media";
+import { genres, cast, TrailorVideos } from "../../interface/media";
+import { CastCard } from "../../components";
+import VideoModal from "../../components/video-modal/VideoModal";
 
 const MediaDetails: React.FC = () => {
   type RouteParams = {
@@ -27,32 +30,41 @@ const MediaDetails: React.FC = () => {
   const { type, id } = useParams<RouteParams>();
   const [mediaDetails, setMediaDetails] = useState<MediaDetails | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [genres, setGenres] = useState<genres[]>([]);
-  const [cast, setCast] = useState<credits[]>([]);
+  const [castMembers, setCastMembers] = useState<cast[]>([]);
+  const [trailer, setTrailer] = useState<TrailorVideos[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        if (type) {
-          const [data, genre, credits] = await Promise.all([
+    if (type) {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const [data, genre, credits, videosData] = await Promise.all([
             fetchingDetails(type, Number(id)),
             fetchingGenres(type),
             fetchingCredits(type, Number(id)),
+            fetchingVideos(type, Number(id)),
           ]);
           setMediaDetails(data);
           setGenres(genre);
-          setCast(credits);
-          console.log(credits, "credits information");
+          setCastMembers(credits.cast);
+          //Set videos
+          setTrailer(
+            videosData.results.filter(
+              (video: TrailorVideos) => video.type === "Trailer"
+            )
+          );
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          setError("Failed to fetch data");
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.log("Error in fetching details =>", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+      };
+      fetchData();
+    }
   }, [type, id]);
 
   if (loading) {
@@ -69,8 +81,13 @@ const MediaDetails: React.FC = () => {
       </Box>
     );
   }
+
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return (
+      <div className="text-red-500">
+        <p>Error: {error}</p>
+      </div>
+    );
   }
 
   const voteAverage = Number(mediaDetails?.vote_average.toFixed(1));
@@ -79,15 +96,25 @@ const MediaDetails: React.FC = () => {
   const runtime = mediaDetails?.runtime
     ? `${Math.floor(mediaDetails.runtime / 60)}h ${mediaDetails.runtime % 60}m`
     : "N/A";
+
+  //Modal Function
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ overflowY: "scroll" }}>
       <img
         src={`${imagePath}${mediaDetails?.poster_path}`}
-        className="w-full opacity-50 filter blur-sm h-[600px] object-cover"
+        className="w-full opacity-50 relative filter blur-sm h-[600px] object-cover"
         alt={mediaDetails?.title || mediaDetails?.name}
       />
       <Container>
-        <section className="flex flex-col md:flex-row md:gap-20 absolute top-0 md:top-5">
+        <section className="flex flex-col md:flex-row md:gap-20 mt-32 absolute top-0 md:top-5">
           <div className="flex justify-center md:justify-start items-center">
             <img
               src={`${imagePath}${mediaDetails?.poster_path}`}
@@ -187,41 +214,47 @@ const MediaDetails: React.FC = () => {
                 Added to Watchlist
               </Button>
 
-              <Button
-                variant="text"
-                startIcon={<PlayIcon />}
-                sx={{
-                  color: "#ccc",
-                  borderBottom: "2.5px solid #ccc",
-                  borderRadius: "0",
-                }}
-              >
-                Play Trailer
-              </Button>
+              <div>
+                <VideoModal
+                  open={modalOpen}
+                  onClose={handleCloseModal}
+                  trailer={trailer}
+                />
+                <Button
+                  variant="text"
+                  startIcon={<PlayIcon />}
+                  onClick={handleOpenModal}
+                  sx={{
+                    color: "#ccc",
+                    borderBottom: "2.5px solid #ccc",
+                    borderRadius: "0",
+                  }}
+                >
+                  Play Trailer
+                </Button>
+              </div>
             </div>
             <p className="mt-4 mb-2 text-gray-300 font-medium text-lg italic">
               {mediaDetails?.tagline}
             </p>
-            <p className="text-white mb-4 font-medium text-lg">
-              Overview
-              <span className="text-gray-300 font-thin mb-4 block">
-                {mediaDetails?.overview}
-              </span>
-            </p>
-            <h3>
-              {mediaDetails?.created_by?.map((created, i) => (
-                <div key={i} className="flex items-center gap-48">
-                  <h3
-                    key={created.id}
-                    className="text-white font-semibold flex"
-                  >
-                    {created.name}
-                  </h3>
-                </div>
-              ))}
-            </h3>
+            <p className="text-white leading-7">{mediaDetails?.overview}</p>
           </div>
         </section>
+        <div className="md:mt-0 mt-20">
+          <h1 className="text-white text-center mt-5 text-2xl font-bold">
+            CAST
+          </h1>
+          <Box sx={{ display: "flex", gap: 5, overflowX: "auto", mt: 5 }}>
+            {castMembers.length === 0 && (
+              <h1 className="text-rose-500 text-center mt-5 text-2xl font-bold">
+                No cast found
+              </h1>
+            )}
+            {castMembers.map((castMember) => (
+              <CastCard key={castMember.id} castMember={castMember} />
+            ))}
+          </Box>
+        </div>
       </Container>
     </Box>
   );
