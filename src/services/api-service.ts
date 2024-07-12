@@ -1,7 +1,5 @@
-// src/services/api-service.ts
-
 import axios from "axios";
-import { MediaItem } from "../interface/media";
+import { MediaDetails } from "../interface/media-details";
 
 const baseURL = "https://api.themoviedb.org/3";
 
@@ -25,49 +23,25 @@ export const fetchingMedia = async (
 export const fetchingDetails = async (
   type: "movie" | "tv" | "all",
   id: number
-): Promise<MediaItem> => {
+): Promise<MediaDetails> => {
   try {
     const url = `${baseURL}/${type}/${id}`;
-    console.log("Request URL:", url); // Log the request URL
-
     const response = await axios.get(url, {
       params: {
         api_key: API_KEY,
       },
     });
-    return response.data;
+    const data: MediaDetails = response.data;
+    return data;
   } catch (error) {
-    console.error("Error fetching details:", error); // Log the error response for debugging
+    console.error("Error fetching details:", error);
     throw new Error("Error fetching details");
-  }
-};
-
-// Fetch videos
-export const fetchVideos = async (
-  type: string,
-  id: number
-): Promise<string | null> => {
-  try {
-    const response = await axios.get(`${baseURL}/${type}/${id}/videos`, {
-      params: {
-        api_key: API_KEY,
-      },
-    });
-
-    // Assuming you want to get the first video key
-    const video = response.data.results.find(
-      (video: any) => video.type === "Trailer"
-    );
-    return video ? video.key : null;
-  } catch (error) {
-    console.error("Error fetching videos:", error);
-    throw new Error("Error fetching videos");
   }
 };
 
 // Fetch genres
 export const fetchingGenres = async (
-  type: "movie" | "tv"
+  type: "movie" | "tv" | "all"
 ): Promise<{ id: number; name: string }[]> => {
   try {
     const response = await axios.get(`${baseURL}/genre/${type}/list`, {
@@ -80,5 +54,20 @@ export const fetchingGenres = async (
   } catch (error) {
     console.error("Error fetching genres:", error);
     throw new Error("Error fetching genres");
+  }
+};
+
+export const fetchingCredits = async (
+  type: "movie" | "tv" | "all",
+  id: number
+) => {
+  try {
+    const response = await axios.get(
+      `${baseURL}/${type}/${id}/credits?api_key=${API_KEY}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching credits:", error);
+    throw error;
   }
 };

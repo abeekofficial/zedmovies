@@ -1,9 +1,10 @@
-import { ArrowLeft, Search, User } from "lucide-react";
-import Button from "../../ui/Button";
+import { ArrowLeft, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "../../ui/container";
 import Navbar from "./navbar";
+import TabletMenu from "./tablet-menu/tabletMenu";
+import { Avatar, Button } from "@mui/material";
 
 const Header = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -47,7 +48,12 @@ const Header = () => {
               </h1>
             </a>
           </div>
-          <Navbar />
+          <div className="lg:flex hidden">
+            <Navbar />
+          </div>
+          <div className="lg:hidden hidden xl:hidden md:flex">
+            <TabletMenu />
+          </div>
           <form
             onSubmit={handleChange}
             className={`flex-shrink-0 gap-4 justify-center flex-grow ${
@@ -55,9 +61,15 @@ const Header = () => {
             }`}
           >
             {showInput && (
-              <Button onClick={() => setShowInput(false)}>
-                <ArrowLeft />
-              </Button>
+              <div className="flex md:hidden">
+                <Button
+                  variant="contained"
+                  onClick={() => setShowInput(false)}
+                  sx={{ backgroundColor: "#00b9ae" }}
+                >
+                  <ArrowLeft />
+                </Button>
+              </div>
             )}
             <div className="max-w-[350px] flex flex-grow items-center">
               <input
@@ -65,9 +77,17 @@ const Header = () => {
                 onChange={(e) => setValue(e.target.value)}
                 type="search"
                 placeholder="Search"
-                className="border text-white border-primary rounded-l-full shadow-inner bg-secondary shadow-secondary w-full py-1 pt-1 h-10 pl-5 text-sm focus:border-blue-500 outline-none"
+                className="border text-white border-gray-400  rounded-l-full shadow-inner bg-secondary shadow-secondary w-full py-1 pt-1 h-10 pl-5 text-sm focus:border-mixedblue focus:border-r-0s outline-none"
               />
-              <Button type="submit">
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  backgroundColor: "#00b9ae",
+                  height: "40px",
+                  borderRadius: "0px 10px 10px 0px",
+                }}
+              >
                 <Search />
               </Button>
             </div>
@@ -78,14 +98,16 @@ const Header = () => {
             }`}
           >
             <div className="flex md:hidden">
-              <Button onClick={() => setShowInput(true)}>
+              <Button
+                onClick={() => setShowInput(true)}
+                variant="contained"
+                sx={{ backgroundColor: "#00b9ae" }}
+              >
                 <Search />
               </Button>
             </div>
             <div className="hidden md:flex">
-              <Button>
-                <User />
-              </Button>
+              <Avatar sx={{ backgeroundColor: "#00b9ae" }} />
             </div>
           </div>
         </nav>

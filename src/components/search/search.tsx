@@ -39,9 +39,9 @@ const Search = () => {
             width={30}
             className="absolute left-0 flex top-3 items-center pointer-events-none pl-3"
           />
-          <div className="w-[450px] h-11 flex items-center rounded-2xl bg-secondary focus:border-2 border-mixedblue">
+          <div className="w-[450px] h-11 flex items-center rounded-2xl bg-secondary border-mixedblue">
             <input
-              className="w-full h-full outline-none border-none rounded-md text-white pl-10 pr-3 bg-secondary placeholder-gray-400 focus:border-mixedblue focus:border-2"
+              className="w-full h-full outline-none border-none rounded-md text-white pl-10 pr-3 bg-secondary placeholder-gray-400 "
               type="search"
               onChange={(e) => console.log(e.target.value)}
               placeholder="Search"
